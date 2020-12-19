@@ -1,0 +1,14 @@
+# IntelliJ
+.idea
+*.iml
+
+# macOS
+.DS_Store
+
+# NodeJS
+node_modules
+
+# Custom
+.no-commit
+.maquetacion
+

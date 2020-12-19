@@ -1,0 +1,22 @@
+[user]
+	email = ruben.zagon@gmail.com
+	name = Rubén Zagon
+	signingkey = FF37285DDBBEBB44
+[gpg]
+	program = gpg
+[commit]
+	gpgsign = true
+[tag]
+	forceSignAnnotated = false
+[core]
+	excludesfile = /Users/rubenzagon/.gitignore_global
+	autocrlf = input
+[alias]
+	s = status
+	ch = checkout
+	cm = commit
+	a = add
+[rerere]
+	enabled = true
+[rebase]
+	autoStash = true
