@@ -11,4 +11,7 @@ function import_apps() {
     brew services stop --all
     brew bundle --file="$HOMEBREW_BUNDLE_FILE_PATH" --force
     echo 'Brew apps imported!'
+
+    xargs -I_ npm install -g "_" < "$DOTFILES_PATH/langs/js/global_modules.txt"
+    echo 'NPM apps imported!'
 }
