@@ -1,3 +1,10 @@
 # dotfiles
 
-mv .gitconfig .dotfiles && ls -s .dotfiles/.gitconfig $PDW/.gitconfig
+TO DO:
+
+[] Actualizar el `init.sh` para autoexportar todo
+
+[] Añadir las funciones de Docker
+
+[] Docker en navi
+
