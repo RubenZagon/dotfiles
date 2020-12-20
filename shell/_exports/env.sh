@@ -1,0 +1,1 @@
+export NAVI_PATH=/Users/rubenzagon/.dotfiles/doc/navi/

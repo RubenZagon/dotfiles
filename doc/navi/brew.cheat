@@ -1,0 +1,9 @@
+% brew
+
+# Start service
+brew service start <service>
+
+$ service: brew services list | grep stopped | awk '{print $1}'
+
+# Stop all services
+brew services stop --all
