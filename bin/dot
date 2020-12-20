@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$' \n\t'
+
+export DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null && pwd)}"
+CALLING_DIR="${CALLING_DIR:-"$PWD"}"
+
+##? A hub for an all-purpose set of scripts
+##?
+##? Usage:
+##?    dot
+##?    dot <context>
+##?    dot <context> <cmd> [<args>...]
+
+_list_command_paths() {
+   find "${DOTFILES}/scripts" -maxdepth 2 -executable -type f
+
+   find "${DOTFILES}/local/scripts" -maxdepth 2 -executable -type f \
+      | sed 's|/local/scripts/|/scripts/|g'
+}
+
+list_command_paths() {
+   _list_command_paths | sort
+}
+
+beautify_command() {
+   awk -F"/" '{print $(NF-1) " " $NF}'
+}
+
+fzf_prompt() {
+   local paths="$1"
+   match="$(echo "$paths" \
+         | beautify_command \
+			| fzf-tmux --height 50% --preview 'dot $(echo {} | cut -d" " -f 1) $(echo {} | cut -d" " -f 2) -h')"
+   printf "$match "
+   read args
+   if coll::is_empty "$args"; then
+      dot $match
+   else
+      dot $match "$args"
+   fi
+}
+
+_version() {
+   cat "${DOTFILES}/rust/Cargo.toml" \
+      | grep version \
+      | head -n1 \
+      | grep -Eo '[0-9\.]+'
+}
+
+_alias() {
+   local -r arg="$1"
+   case "$arg" in
+      js|json) echo javascript ;;
+      phab|ph) echo phabricator ;;
+      sh|shell) echo terminal ;;
+      fs) echo filesystem ;;
+      and) echo android ;;
+      clj) echo clojure ;;
+      game) echo gaming ;;
+      mac|osx|os|linux|win) echo system ;;
+      environment|env) echo self ;;
+      net) echo network ;;
+      pkg) echo package ;;
+      sec) echo security ;;
+      aws) echo cloud ;;
+      win) echo windows ;;
+      not) echo notification ;;
+      google) echo search ;;
+      kl) echo knowledge ;;
+      down|downloads|torrent) echo download ;;
+      work|uber|w|u) echo "../local/scripts/uber" ;;
+      *) echo "$arg" ;;
+   esac
+}
+
+if [[ $# -eq 0 ]]; then
+   # Shows available contexts
+   # or prompts for a command if fzf is installed
+   source "${DOTFILES}/scripts/core/main.sh"
+   source "${DOTFILES}/scripts/core/coll.sh"
+
+   has fzf \
+      && fzf_prompt "$(list_command_paths)" \
+      || (list_command_paths | beautify_command)
+
+elif [[ $# -eq 1 ]]; then
+   # Shows available commands for a given context
+   source "${DOTFILES}/scripts/core/main.sh"
+
+   context_query="$(_alias $1)"
+
+   case $context_query in
+      -h|--help) doc::help_or_fail "$@" && exit ;;
+      -v|--version) _version && exit ;;
+   esac
+
+   find "${DOTFILES}/scripts/${context_query}/" -maxdepth 2 -executable -type f \
+      | awk -F"/" '{print $NF}'
+
+else
+   # Executes a command directly
+
+   ctx="$(_alias $1)"
+   cmd="$2"
+
+   shift 2
+   export DOT_TRACE=${DOT_TRACE:-false}
+   "${DOTFILES}/scripts/${ctx}/${cmd}" "$@"
+fi
