@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+REPO="https://github.com/RubenZagon/dotfiles.git"
+DOT_BIN="${DOTFILES}/bin/dot"
+
+##? Setups the environment
+##?
+##? Usage:
+##?    init [<profile>]
+
+case "${1:-}" in
+   -h|--help|--version) grep "^##?" "$0" | cut -c 5-; exit 0 ;;
+esac
+
+_dot() {
+   "$DOT_BIN" "$@"
+}
+
+clone_repo() {
+   git clone "$REPO" "$DOTFILES" --depth 1
+}
+
+_has() {
+   type "$1" &>/dev/null
+}
+
+if ! _has sudo; then
+   sudo() { "$@"; }
+   export -f sudo
+fi
+
+# Pushes the current directory to the stack
+pushd . >/dev/null
+
+if [ -f "$DOT_BIN" ]; then
+   :
+elif [ -d "$DOTFILES" ]; then
+   echo "Backing up existing dotfiles folder and cloning new dotfiles..."
+   old_dotfiles=$(mktemp -u -d "${DOTFILES}_XXXX")
+   mv "$DOTFILES" "$old_dotfiles"
+   clone_repo
+else
+   echo "No dotfiles folder found. Cloning dotfiles..."
+   clone_repo
+fi
+
+cd "$DOTFILES"
+
+# Make sure everything is up to date
+if ! ${DOT_INSTALL_SKIP_UPDATE:-false}; then
+   _has apt-get && sudo apt-get update || true
+   _has brew && brew update || true
+fi
+
+# Install some key dependencies
+_dot pkg add git || true
+_dot pkg add curl || true
+_dot pkg add wget || true
+
+# Android bootstrap
+if uname -a | grep -q "ndroid"; then
+   pkg install ncurses-utils || true
+   _dot pkg add termux-essentials || true
+fi
+
+# OSX bootstrap
+if uname -s | grep -q "arwin"; then
+   _dot pkg add brew || true
+   _dot pkg add gnu || true
+fi
+
+# call setup
+_dot self update
+
+# cleanup
+popd >/dev/null
+
+exec "${SHELL:-bash}"
