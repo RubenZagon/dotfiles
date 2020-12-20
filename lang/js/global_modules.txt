@@ -1,0 +1,4 @@
+gatsby-cli
+gulp
+now
+spaceship-prompt
