@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+DOTFILES_PATH=$HOME/.dotfiles
+ZIM_HOME="$DOTFILES_PATH/modules/zimfw"
+
+source "$DOTFILES_PATH/shell/sout"
+source "$DOTFILES_PATH/shell/os"
+source "$DOTFILES_PATH/.scripts/utils"
+
+echo "Update submodules"
+git submodule init
+git submodule update
+
+echo " 🍉 Installing zim"
+zsh "$ZIM_HOME/zimfw.zsh" install
+
+if [ ! -d "$HOME/.utilsh" ]; then
+  if [ -z "$UTILSH_PATH" ]; then
+    echo " 🧢 Installing utilsh"
+    git clone --depth 1 git@github.com:raulanatol/utilsh.git "$HOME/.utilsh"
+    "$HOME/.utilsh/bin/installer" "$HOME/.utilsh"
+  fi
+fi
+
+if os::is_macos; then
+  sout::info "Installing MacOS 🍎 custom packages"
+  utils::install_macos
+fi
+
+sout::info " 👾 ZSH as the default shell"
+chsh -s "$(command -v zsh)"
+
+sout::info " 👌 Done"
