@@ -4,6 +4,7 @@
 
 # macOS
 .DS_Store
+scripts/.DS_Store
 
 # NodeJS
 node_modules
