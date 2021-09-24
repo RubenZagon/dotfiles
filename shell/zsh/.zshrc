@@ -170,8 +170,19 @@ function docker_none_container {
     docker rmi -f $(docker images -f "dangling=true" -q)
 }
 
-
+# autojump - a faster way to navigate your filesystem
+[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
 alias gl="git pull"
 alias gst="git status"
 alias gco="git checkout"
+alias cat="bat"
+alias man="tldr"
+alias find="fd"
+
+# Problem with docker in mac
+export DOCKER_CLIENT_TIMEOUT=120
+export COMPOSE_HTTP_TIMEOUT=120
+
+# Add ~/.local/ to PATH Python3
+export PATH=$HOME/.local/bin:$PATH
