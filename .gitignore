@@ -11,3 +11,6 @@ shell/zsh/**/**.zwc.old
 
 # Private stuff
 /**/**/private-*
+
+# Secrets
+secrets*.sh
