@@ -7,6 +7,9 @@
 # @raycast.icon images/translate.png
 # @raycast.packageName Utils
 
-# @raycast.argument1 { "type": "text", "placeholder": "texto to translate..." }
+# @raycast.argument1 { "type": "text", "placeholder": "text...", "percentEncoded": true  }
 
-open "https://translate.google.com/?sl=auto&tl=es&text=${1}&op=translate"
+# Configure your default language code here:
+defaultLang="es"
+
+open "https://translate.google.com/?sl=auto&tl=$defaultLang&text=${1}&op=translate"
