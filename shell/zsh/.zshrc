@@ -1,14 +1,8 @@
-
-#### FIG ENV VARIABLES ####
-# Please make sure this block is at the start of this file.
-[ -s ~/.fig/shell/pre.sh ] && source ~/.fig/shell/pre.sh
-#### END FIG ENV VARIABLES ####
-
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 ## Custom aliases and $PATH additions
 
-#### FIG ENV VARIABLES ####
-[ -s ~/.fig/fig.sh ] && source ~/.fig/fig.sh
-#### END FIG ENV VARIABLES ####
+
 
 # Start configuration added by Zim install {{{
 #
@@ -191,10 +185,19 @@ alias gco="git checkout"
 alias cat="bat"
 alias man="tldr"
 alias find="fd"
+alias git-clean-local-branches='git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
 
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 # Problem with docker in mac
 export DOCKER_CLIENT_TIMEOUT=120
 export COMPOSE_HTTP_TIMEOUT=120
 
+export DOCKER_HOST=unix:///var/run/docker.sock
+
 # Add ~/.local/ to PATH Python3
 export PATH=$HOME/.local/bin:$PATH
+
+eval "$(starship init zsh)"
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"

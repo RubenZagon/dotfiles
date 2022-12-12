@@ -12,4 +12,5 @@ node_modules
 # Custom
 .no-commit
 .maquetacion
+*_code_coverage*
 
