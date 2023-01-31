@@ -186,6 +186,7 @@ alias cat="bat"
 alias man="tldr"
 alias find="fd"
 alias git-clean-local-branches='git branch --merged | egrep -v "(^\*|master|main|dev)" | xargs git branch -d'
+alias brew86="arch -x86_64 /usr/local/homebrew/bin/brew"
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 # Problem with docker in mac
@@ -196,6 +197,7 @@ export DOCKER_HOST=unix:///var/run/docker.sock
 
 # Add ~/.local/ to PATH Python3
 export PATH=$HOME/.local/bin:$PATH
+export PATH="/usr/local/sbin:$PATH"
 
 eval "$(starship init zsh)"
 
