@@ -2,8 +2,6 @@
 	email = ruben.zagon@gmail.com
 	name = Rubén Zagon
 	signingkey = FF37285DDBBEBB44
-[includeIf "gitdir:~/Holaluz/"]
-	path = .gitconfig-leanmind
 [includeIf "gitdir:~/Proyectos/lean-mind/"]
 	path = .gitconfig-leanmind
 [gpg]
